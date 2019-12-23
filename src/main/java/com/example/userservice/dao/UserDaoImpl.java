@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao{
 		boolean status = false;
 		// Searching for existing user
 		if(getUserDetails(user.getEmail()) != null) {
-			LOGGER.info("signUpUser(): User already created! email: {}",user.getEmail());
+			LOGGER.info("signUpUser():-> User already created! email: {}",user.getEmail());
 			return status;
 		}
 		Session session = sessionFactory.openSession();
@@ -79,7 +79,7 @@ public class UserDaoImpl implements UserDao{
 		 } catch (HibernateException e) {
 	         if (tx!=null) tx.rollback();
 	         status = false;
-	         e.printStackTrace(); 
+	         LOGGER.error("Error: Update user", e); 
 	      } finally {
 	         session.close(); 
 	      }
@@ -114,8 +114,6 @@ public class UserDaoImpl implements UserDao{
 	
 	private String getRandomCode() {
 		String code ="test";
-		
 		return code;
 	}
-	
 }

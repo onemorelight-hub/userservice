@@ -3,7 +3,6 @@ package com.example.userservice.jwt.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.example.userservice.exception.InvalidTokenException;
 import com.example.userservice.model.User;
 
 import io.jsonwebtoken.Claims;
