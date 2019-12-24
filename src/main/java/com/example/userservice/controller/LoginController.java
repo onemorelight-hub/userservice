@@ -103,4 +103,15 @@ public class LoginController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(object);
 		}	
 	}
+	
+	@PostMapping (value = "/logout")
+	public ResponseEntity<Map<String, Object>> logout(){
+		HttpHeaders headers = new HttpHeaders();
+		Map<String, Object> objectNode = new HashMap<String, Object>();
+		
+		headers.add("Authorisation", "Invalid Token");
+		objectNode.put(MESSAGE, "Logout sucessed");
+		objectNode.put("Token", "Invalid Token");
+		return ResponseEntity.status(HttpStatus.ACCEPTED).headers(headers).body(objectNode);
+	}
 }
