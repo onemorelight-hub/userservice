@@ -3,6 +3,8 @@ package com.example.userservice.model;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,16 +24,19 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class User {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column (name = "user_id")
-	private String userId;
+	private int userId;
 	
-	@Column (name = "first_name" , nullable = false)
+//	@Column (name = "first_name" , nullable = false)
+	@Column (name = "first_name")
 	private String firstName;
 	
 	@Column (name = "middle_name")
 	private String middleName;
 	
-	@Column (name = "last_name" , nullable = false)
+//	@Column (name = "last_name" , nullable = false)
+	@Column (name = "last_name" )
 	private String lastName;
 	
 	@Column (name = "email" , nullable = false)
@@ -40,7 +45,8 @@ public class User {
 	@Column (name = "area_code")
 	private String areaCode;
 	
-	@Column (name = "user_type" , nullable = false)
+//	@Column (name = "user_type" , nullable = false)
+	@Column (name = "user_type")
 	private String userType;
 	
 	@Column (name = "created_date" , nullable = false , columnDefinition = "DATETIME")
@@ -72,11 +78,11 @@ public class User {
 	private String dob;
 	
 	
-	public String getUserId() {
+	public int getUserId() {
 		return userId;
 	}
 
-	public void setUserId(String userId) {
+	public void setUserId(int userId) {
 		this.userId = userId;
 	}
 

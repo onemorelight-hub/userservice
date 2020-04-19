@@ -2,6 +2,7 @@ package com.example.userservice.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -113,7 +114,14 @@ public class UserDaoImpl implements UserDao{
 	}
 	
 	private String getRandomCode() {
-		String code ="test";
-		return code;
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < 18) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
 	}
 }

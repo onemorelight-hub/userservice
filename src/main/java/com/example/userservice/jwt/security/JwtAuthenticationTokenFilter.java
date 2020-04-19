@@ -30,19 +30,17 @@ public class JwtAuthenticationTokenFilter extends AbstractAuthenticationProcessi
         String header2 = httpServletRequest.getHeader("Authorization");
         String header3 = httpServletRequest.getHeader("test");
 
-System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header: "+header);
-System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header1: "+header1);
-System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header2: "+header2);
-System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header3: "+header3);
-
-
+		System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header: "+header);
+		System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header1: "+header1);
+		System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header2: "+header2);
+		System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication()-> header3: "+header3);
 
         if (header == null || !header.startsWith("Token ")) {
             throw new MissingTokenException();
         }
 
         String authenticationToken = header.substring(6);
-System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication() authenticationToken: "+authenticationToken);
+        System.out.println("JwtAuthenticationTokenFilter.attemptAuthentication() authenticationToken: "+authenticationToken);
         JwtAuthenticationToken token = new JwtAuthenticationToken(authenticationToken);
         return getAuthenticationManager().authenticate(token);
     }

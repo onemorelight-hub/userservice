@@ -10,7 +10,14 @@ import com.example.userservice.dao.UserDao;
 import com.example.userservice.enumdef.LoginStatus;
 import com.example.userservice.jwt.security.JwtTokenGenerator;
 import com.example.userservice.model.LoginData;
+import com.example.userservice.model.MailInfo;
 import com.example.userservice.model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 @Service
 public class LoginServiceImpl implements LoginService{
@@ -23,11 +30,13 @@ public class LoginServiceImpl implements LoginService{
 	
 	@Value("${application.invalidToken}")
 	private String invalidToken;
+	
+	private String mailServiceUrl = "http://mail-service:2021";
 
 	@Override
-	public LoginData loginUser(User user) {
+	public LoginData loginUser(String[] values) {
 		LoginData loginData = new LoginData();
-		User retrivedUser = userDao.getUserDetails(user.getEmail());
+		User retrivedUser = userDao.getUserDetails(values[0]);
 		// If user is not present 
 		if(retrivedUser == null ) {
 			loginData.setLoginStatus(LoginStatus.NOT_REGISTERED);
@@ -39,7 +48,7 @@ public class LoginServiceImpl implements LoginService{
 			return loginData;
 		}
 		// Verifying user password and 
-		if(retrivedUser.getPassword().equals(user.getPassword())) {
+		if(retrivedUser.getPassword().equals(values[1])) {
 			Date date = new Date();
 			retrivedUser.setLastLogin(date);
 			userDao.updateUser(retrivedUser);
@@ -54,11 +63,37 @@ public class LoginServiceImpl implements LoginService{
 
 	@Override
 	public boolean signUpUser(User user) {
+		boolean status = false;
 		 if(userDao.signUpUser(user)) {
-		//	 sendEmail(user);
-			 return true;
+			 MailInfo mailInfo = new MailInfo();
+			 String[] receiverList = new String[1];
+			 receiverList[0] = user.getEmail();
+			 mailInfo.setReceiverList(receiverList);
+			 mailInfo.setSubject("Verification Mail:-> One More Light");
+			 String message = "Please click the link to verify: " + "https://localhost:8443/" +user.getEmail() +"/" + user.getVerificationCode();
+			 mailInfo.setMessage(message);
+			 ObjectMapper mapper = new ObjectMapper();
+			 String request = null;
+			 try {
+				request = mapper.writeValueAsString(mailInfo);
+			} catch (JsonProcessingException e1) {
+				e1.printStackTrace();
+			}
+			 try {
+				 System.out.println("Test-> request body: "+request);
+				 HttpResponse<JsonNode> jsonResponse = Unirest.post(mailServiceUrl + "/sendmail/sendVerificationMail")
+						 .header("accept", "application/json")
+					      .header("content-type", "application/json")
+						 .body(request)
+						 .asJson();
+				 if(jsonResponse.getStatus() == 200) {
+					 status = true;
+				 }
+			} catch (UnirestException e) {
+				e.printStackTrace();
+			}
 		 }
-		 return false;
+		 return status;
 	}
 
 	@Override

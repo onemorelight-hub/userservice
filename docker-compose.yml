@@ -1,0 +1,24 @@
+version: "3"
+services:
+  user-service:
+    build: .
+    ports:
+      - "2020:2020"
+    networks:
+      - my-net
+    depends_on:
+      - mysqldb-user
+    environment:
+      WAIT_HOSTS: mysqldb-user:3306  
+  mysqldb-user:
+    image: mysql:latest
+    ports:
+      - "3606:3606"
+    networks:
+      - my-net
+    environment:
+      - MYSQL_ROOT_PASSWORD=test1234
+      - MYSQL_DATABASE=user_database
+networks:
+  my-net:
+    driver: bridge

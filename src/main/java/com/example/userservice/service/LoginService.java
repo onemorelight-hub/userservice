@@ -7,7 +7,7 @@ import com.example.userservice.model.User;
 
 @Service
 public interface LoginService {
-	public LoginData loginUser(User user);
+	public LoginData loginUser(String[] values);
 	public boolean signUpUser(User user);
 	public boolean verifyUser(String email, String verifyCode);
 }
